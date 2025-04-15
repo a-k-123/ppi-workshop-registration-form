@@ -158,6 +158,7 @@
   </div>
 
   <script>
+    const organisation = document.getElementById("organisation");
     const staffType = document.getElementById("staffType");
     const orgField = document.getElementById("orgField");
     const paymentSection = document.getElementById("paymentSection");
@@ -166,6 +167,7 @@
     const paymentInfo = document.getElementById("paymentInfo");
     const totalCost = document.getElementById("totalCost");
     const checkboxes = workshopsGroup.querySelectorAll("input[type='checkbox']");
+    const orgDeptField = document.getElementById("orgDeptField");
     const orgDeptField = document.getElementById("orgDeptField");
 
     staffType.addEventListener("change", () => {
@@ -267,9 +269,7 @@
   })
   .then(response => {
     if (response.ok) {
-      alert("Thank you! Your registration has been submitted.");
-      form.reset(); // clears the form
-      totalCost.value = "Free"; // resets cost
+     window.location.href = "thank-you.html";
     } else {
       alert("Something went wrong. Please try again.");
     }
