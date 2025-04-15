@@ -24,10 +24,10 @@
     }
     .logo {
       display: block;
-  max-width: 500px;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  padding: 0.5rem 0;
+      max-width: 500px;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      padding: 0.5rem 0;
     }
     label {
       display: block;
@@ -75,7 +75,6 @@
     <img src="logo.png" alt="NIHR Logo" class="logo" />
 
     <div class="form-wrapper">
-
       <form id="registrationForm">
         <label for="staffType">I am staff at</label>
         <select id="staffType">
@@ -158,6 +157,7 @@
   </div>
 
   <script>
+    const form = document.getElementById("registrationForm");
     const organisation = document.getElementById("organisation");
     const staffType = document.getElementById("staffType");
     const orgField = document.getElementById("orgField");
@@ -168,7 +168,9 @@
     const totalCost = document.getElementById("totalCost");
     const checkboxes = workshopsGroup.querySelectorAll("input[type='checkbox']");
     const orgDeptField = document.getElementById("orgDeptField");
-    const orgDeptField = document.getElementById("orgDeptField");
+    const name = document.getElementById("name");
+    const role = document.getElementById("role");
+    const email = document.getElementById("email");
 
     staffType.addEventListener("change", () => {
       const type = staffType.value;
@@ -222,7 +224,7 @@
       }
     });
 
-    document.getElementById("registrationForm").addEventListener("submit", function (e) {
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
       let valid = true;
       const elements = [
@@ -247,39 +249,38 @@
         valid = false;
       }
 
-     if (valid) {
-  const formData = {
-    staffType: staffType.value,
-    organisation: organisation.value,
-    orgDept: document.getElementById("orgDept").value,
-    workshops: [...checkboxes].filter(cb => cb.checked).map(cb => cb.value).join(", "),
-    totalCost: totalCost.value,
-    paymentMethod: paymentMethod.value,
-    name: name.value,
-    role: role.value,
-    email: email.value
-  };
+      if (valid) {
+        const formData = {
+          staffType: staffType.value,
+          organisation: organisation.value,
+          orgDept: document.getElementById("orgDept").value,
+          workshops: [...checkboxes].filter(cb => cb.checked).map(cb => cb.value).join(", "),
+          totalCost: totalCost.value,
+          paymentMethod: paymentMethod.value,
+          name: name.value,
+          role: role.value,
+          email: email.value
+        };
 
-  fetch("https://prod-44.uksouth.logic.azure.com:443/workflows/6f8ddc79725e43a0af942709a24c1576/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=lmvF9hyaW3n4x1LeNDfyFC1KQm30FQM1I_7lGfUUS8s", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(formData)
-  })
-  .then(response => {
-    if (response.ok) {
-     window.location.href = "thank-you.html";
-    } else {
-      alert("Something went wrong. Please try again.");
-    }
-  })
-  .catch(error => {
-    console.error("Error submitting form:", error);
-    alert("There was a problem submitting the form.");
-  });
-}
-
+        fetch("https://prod-44.uksouth.logic.azure.com:443/workflows/6f8ddc79725e43a0af942709a24c1576/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=lmvF9hyaW3n4x1LeNDfyFC1KQm30FQM1I_7lGfUUS8s", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = "thank-you.html";
+          } else {
+            alert("Something went wrong. Please try again.");
+          }
+        })
+        .catch(error => {
+          console.error("Error submitting form:", error);
+          alert("There was a problem submitting the form.");
+        });
+      }
     });
   </script>
 </body>
