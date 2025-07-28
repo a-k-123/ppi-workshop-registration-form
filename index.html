@@ -229,8 +229,25 @@ paymentMethod.addEventListener("change", () => {
     paymentInfo.style.display = "block";
     additionalFields.style.display = "none";
     formSubmitBtn.style.display = "none";
-    emailPPIBtn.style.display = "inline-block";
-
+    emailPPIBtn.style.display = "none"; // HIDDEN for BACS
+    // ⬅️ Should be PO instructions, now correctly swapped in
+    paymentInfo.innerHTML = `
+      Please contact the PPI Team via email: <a href="mailto:ppihelpdesk@ucl.ac.uk">ppihelpdesk@ucl.ac.uk</a> and include:<br><br>
+      <ul>
+        <li>Name (of workshop participant)</li>
+        <li>Type of organisation (non-profit, for-profit, industry, pharmaceutical)</li>
+        <li>Name of organisation</li>
+        <li>Workshops you’d like to attend – please give titles and date</li>
+        <li>Total cost: <strong>${costDisplay}</strong></li>
+      </ul>
+      Your place will only be confirmed once the PPI Team confirms proof of payment has been received.
+    `;
+  } else if (method === "Purchase Order (PO)") {
+    paymentInfo.style.display = "block";
+    additionalFields.style.display = "none";
+    formSubmitBtn.style.display = "none";
+    emailPPIBtn.style.display = "inline-block"; // ✅ Now appears for PO
+    // ⬅️ Should be BACS instructions, now correctly swapped in
     paymentInfo.innerHTML = `
       Please liaise with your organisation’s finance team. The Purchase Order should include the below and be sent to the PPI Team, as a PDF, via email: <a href="mailto:ppihelpdesk@ucl.ac.uk">ppihelpdesk@ucl.ac.uk</a><br><br>
       Your Purchase Order (PO) total is <strong>${costDisplay}</strong><br><br>
@@ -244,23 +261,6 @@ paymentMethod.addEventListener("change", () => {
       London NW1 2PG<br><br>
       Your place will only be confirmed once the Purchase Order (PO) has been received.<br><br>
       The Purchase Order (PO) will need to be received at least 10 days prior to the first workshop you want to register for.
-    `;
-  } else if (method === "Purchase Order (PO)") {
-    paymentInfo.style.display = "block";
-    additionalFields.style.display = "none";
-    formSubmitBtn.style.display = "none";
-    emailPPIBtn.style.display = "none";
-
-    paymentInfo.innerHTML = `
-      Please contact the PPI Team via email: <a href="mailto:ppihelpdesk@ucl.ac.uk">ppihelpdesk@ucl.ac.uk</a> and include:<br><br>
-      <ul>
-        <li>Name (of workshop participant)</li>
-        <li>Type of organisation (non-profit, for-profit, industry, pharmaceutical)</li>
-        <li>Name of organisation</li>
-        <li>Workshops you’d like to attend – please give titles and date</li>
-        <li>Total cost: <strong>${costDisplay}</strong></li>
-      </ul>
-      Your place will only be confirmed once the PPI Team confirms proof of payment has been received.
     `;
   } else {
     paymentInfo.style.display = "none";
