@@ -138,21 +138,25 @@
            <div id="paymentInfo" class="payment-info" style="display: none;"></div>
          </div>
  
-         <label for="name">Name</label>
-         <input type="text" id="name"/>
- 
-         <label for="role">Role/Job title</label>
-         <input type="text" id="role"/>
- 
-         <div id="orgDeptField" style="display: none;">
-           <label for="orgDept">Organisation/Department</label>
-           <input type="text" id="orgDept"/>
-         </div>
- 
-         <label for="email">Email address</label>
-         <input type="email" id="email"/>
- 
-         <button type="submit">Submit</button>
+      <div id="additionalFields">
+  <label for="name">Name</label>
+  <input type="text" id="name"/>
+
+  <label for="role">Role/Job title</label>
+  <input type="text" id="role"/>
+
+  <div id="orgDeptField" style="display: none;">
+    <label for="orgDept">Organisation/Department</label>
+    <input type="text" id="orgDept"/>
+  </div>
+
+  <label for="email">Email address</label>
+  <input type="email" id="email"/>
+</div>
+
+<button type="submit" id="submitBtn">Submit</button>
+<button type="button" id="emailPPI" style="display: none;">Email the PPI Team</button>
+
        </form>
      </div>
    </div>
@@ -190,36 +194,82 @@
        totalCost.value = (cost === 0) ? "Free" : `£${cost}`;
      }
  
-     paymentMethod.addEventListener("change", () => {
-       const method = paymentMethod.value;
-       if (method === "Bank Transfer (BACS)") {
-         paymentInfo.style.display = "block";
-         paymentInfo.innerHTML = `
-           Please contact the PPI Team: ppihelpdesk@ucl.ac.uk and include:
-           <ul>
-             <li>Name(s) of workshop participant</li>
-             <li>Organisation</li>
-             <li>Organisation type (non-profit/for-profit/industry/pharmaceutical)</li>
-             <li>Number of workshops</li>
-           </ul>
-           Payment must be received before submission.
-         `;
-       } else if (method === "Purchase Order (PO)") {
-         paymentInfo.style.display = "block";
-         paymentInfo.innerHTML = `
-           Please liaise with your organisation’s finance team. The Purchase Order should include:
-           <ul>
-             <li>Name(s) of workshop participant</li>
-             <li>Date and title of workshop(s)</li>
-           </ul>
-           Your space will only be confirmed once the PO has been received.
-         `;
-       } else {
-         paymentInfo.style.display = "none";
-         paymentInfo.innerHTML = "";
-       }
-     });
- 
+const additionalFields = document.getElementById("additionalFields");
+const formSubmitBtn = document.getElementById("submitBtn");
+const emailPPIBtn = document.getElementById("emailPPI");
+
+emailPPIBtn.addEventListener("click", () => {
+  const selectedWorkshops = [...checkboxes]
+    .filter(cb => cb.checked)
+    .map(cb => cb.value)
+    .join(", ");
+  const costValue = totalCost.value.trim();
+  const body = encodeURIComponent(
+    `I would like to register for the following workshops via BACS:\n\n` +
+    `Workshops: ${selectedWorkshops || '[Please list workshops]'}\n` +
+    `Total cost: ${costValue === "Free" ? "Free" : costValue + " + VAT"}\n\n` +
+    `Please find below the required details:\n\n` +
+    `Name (of workshop participant):\n` +
+    `Type of organisation (non-profit, for-profit, industry, pharmaceutical):\n` +
+    `Name of organisation:`
+  );
+
+  const subject = encodeURIComponent("BACS Registration – PPI Workshop");
+  const mailtoLink = `mailto:ppihelpdesk@ucl.ac.uk?subject=${subject}&body=${body}`;
+  window.location.href = mailtoLink;
+});
+
+
+paymentMethod.addEventListener("change", () => {
+  const method = paymentMethod.value;
+  const costValue = totalCost.value.trim();
+  const costDisplay = costValue === "Free" ? "Free" : `${costValue} + VAT`;
+
+  if (method === "Bank Transfer (BACS)") {
+    paymentInfo.style.display = "block";
+    additionalFields.style.display = "none";
+    formSubmitBtn.style.display = "none";
+    emailPPIBtn.style.display = "inline-block";
+
+    paymentInfo.innerHTML = `
+      Please liaise with your organisation’s finance team. The Purchase Order should include the below and be sent to the PPI Team, as a PDF, via email: <a href="mailto:ppihelpdesk@ucl.ac.uk">ppihelpdesk@ucl.ac.uk</a><br><br>
+      Your Purchase Order (PO) total is <strong>${costDisplay}</strong><br><br>
+      <ul>
+        <li>Name(s) of workshop participant</li>
+        <li>Workshops you’d like to attend – please give titles and date</li>
+      </ul>
+      Please note UCLH’s address:<br>
+      Finance Department, 2nd Floor - North Wing<br>
+      250 Euston Road<br>
+      London NW1 2PG<br><br>
+      Your place will only be confirmed once the Purchase Order (PO) has been received.<br><br>
+      The Purchase Order (PO) will need to be received at least 10 days prior to the first workshop you want to register for.
+    `;
+  } else if (method === "Purchase Order (PO)") {
+    paymentInfo.style.display = "block";
+    additionalFields.style.display = "none";
+    formSubmitBtn.style.display = "none";
+    emailPPIBtn.style.display = "none";
+
+    paymentInfo.innerHTML = `
+      Please contact the PPI Team via email: <a href="mailto:ppihelpdesk@ucl.ac.uk">ppihelpdesk@ucl.ac.uk</a> and include:<br><br>
+      <ul>
+        <li>Name (of workshop participant)</li>
+        <li>Type of organisation (non-profit, for-profit, industry, pharmaceutical)</li>
+        <li>Name of organisation</li>
+        <li>Workshops you’d like to attend – please give titles and date</li>
+        <li>Total cost: <strong>${costDisplay}</strong></li>
+      </ul>
+      Your place will only be confirmed once the PPI Team confirms proof of payment has been received.
+    `;
+  } else {
+    paymentInfo.style.display = "none";
+    additionalFields.style.display = "block";
+    formSubmitBtn.style.display = "inline-block";
+    emailPPIBtn.style.display = "none";
+  }
+});
+
      document.getElementById("registrationForm").addEventListener("submit", function (e) {
        e.preventDefault();
        let valid = true;
