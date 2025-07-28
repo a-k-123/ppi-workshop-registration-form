@@ -229,8 +229,7 @@ paymentMethod.addEventListener("change", () => {
     paymentInfo.style.display = "block";
     additionalFields.style.display = "none";
     formSubmitBtn.style.display = "none";
-    emailPPIBtn.style.display = "none"; // HIDDEN for BACS
-    // ⬅️ Should be PO instructions, now correctly swapped in
+    emailPPIBtn.style.display = "none";
     paymentInfo.innerHTML = `
       Please contact the PPI Team via email: <a href="mailto:ppihelpdesk@ucl.ac.uk">ppihelpdesk@ucl.ac.uk</a> and include:<br><br>
       <ul>
@@ -246,8 +245,7 @@ paymentMethod.addEventListener("change", () => {
     paymentInfo.style.display = "block";
     additionalFields.style.display = "none";
     formSubmitBtn.style.display = "none";
-    emailPPIBtn.style.display = "inline-block"; // ✅ Now appears for PO
-    // ⬅️ Should be BACS instructions, now correctly swapped in
+    emailPPIBtn.style.display = "inline-block";
     paymentInfo.innerHTML = `
       Please liaise with your organisation’s finance team. The Purchase Order should include the below and be sent to the PPI Team, as a PDF, via email: <a href="mailto:ppihelpdesk@ucl.ac.uk">ppihelpdesk@ucl.ac.uk</a><br><br>
       Your Purchase Order (PO) total is <strong>${costDisplay}</strong><br><br>
