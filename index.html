@@ -219,17 +219,18 @@ emailPPIBtn.addEventListener("click", () => {
   window.location.href = mailtoLink;
 });
 
-
 paymentMethod.addEventListener("change", () => {
   const method = paymentMethod.value;
   const costValue = totalCost.value.trim();
   const costDisplay = costValue === "Free" ? "Free" : `${costValue} + VAT`;
 
   if (method === "Bank Transfer (BACS)") {
+    // ✅ This is the BACS option
     paymentInfo.style.display = "block";
     additionalFields.style.display = "none";
     formSubmitBtn.style.display = "none";
-    emailPPIBtn.style.display = "none";
+    emailPPIBtn.style.display = "inline-block";
+
     paymentInfo.innerHTML = `
       Please contact the PPI Team via email: <a href="mailto:ppihelpdesk@ucl.ac.uk">ppihelpdesk@ucl.ac.uk</a> and include:<br><br>
       <ul>
@@ -242,10 +243,12 @@ paymentMethod.addEventListener("change", () => {
       Your place will only be confirmed once the PPI Team confirms proof of payment has been received.
     `;
   } else if (method === "Purchase Order (PO)") {
+    // ✅ This is the PO option
     paymentInfo.style.display = "block";
     additionalFields.style.display = "none";
     formSubmitBtn.style.display = "none";
-    emailPPIBtn.style.display = "inline-block";
+    emailPPIBtn.style.display = "none";
+
     paymentInfo.innerHTML = `
       Please liaise with your organisation’s finance team. The Purchase Order should include the below and be sent to the PPI Team, as a PDF, via email: <a href="mailto:ppihelpdesk@ucl.ac.uk">ppihelpdesk@ucl.ac.uk</a><br><br>
       Your Purchase Order (PO) total is <strong>${costDisplay}</strong><br><br>
@@ -261,6 +264,7 @@ paymentMethod.addEventListener("change", () => {
       The Purchase Order (PO) will need to be received at least 10 days prior to the first workshop you want to register for.
     `;
   } else {
+    // Reset if neither option is selected
     paymentInfo.style.display = "none";
     additionalFields.style.display = "block";
     formSubmitBtn.style.display = "inline-block";
